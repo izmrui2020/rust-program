@@ -1,62 +1,29 @@
-use std::fmt;
+use std::fmt::Display;
 
-pub trait Summary {
-    fn summarize(&self) -> String;
+pub trait Ranking {
+    fn run();
 }
 
-pub struct NewsArticle {
-    pub headline: String,
-    pub location: String,
-    pub author: String,
-    pub content: String,
+pub trait Draw {
+    fn draw(&self);
 }
 
-impl Summary for NewsArticle {
-    fn summarize(&self) -> String {
-        format!("{}, by {} ({})", self.headline, self.author, self.location)
-    }
+pub struct Screen {
+    pub components: Vec<Box<Draw>>,
 }
 
-pub struct Tweet {
-    pub username: String,
-    pub content: String,
-    pub reply: bool,
-    pub retweet: bool,
-}
-
-impl Summary for Tweet {
-    fn summarize(&self) -> String {
-        format!("{}: {}", self.username, self.content)
-    }
-}
-
-//traitにあるメソッドを使った関数をプラスで作りたい場合。
-pub fn notify<T: Summary>(item: &T) {
-    println!("Breaking news! {}", item.summarize());
-}
-
-fn largest<&T>(list: &[T]) -> &T {
-    let mut largest = list[0];
-
-    for &item in list {
-        if item > largest {
-            largest = item;
+impl Screen {
+    pub fn run(&self) {
+        for component in self.components.iter() {
+            component.draw();
         }
     }
-
-    largest
 }
 
-fn main() {
-    let tweet = Tweet {
-        username: String::from("horse_ebooks"),
-        content: String::from(
-            // もちろん、ご存知かもしれませんがね、みなさん
-            "of course, as you probably already know, people",
-        ),
-        reply: false,
-        retweet: false,
-    };
-
-    notify(&tweet);
+pub struct Amount<T: Ranking + Display> {
+    pub components: Vec<T>,
 }
+
+impl<T> Amount<T> where T: Ranking + Display {}
+
+fn main() {}
