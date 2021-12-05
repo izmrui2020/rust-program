@@ -1,3 +1,5 @@
+use std::fmt;
+
 pub trait Summary {
     fn summarize(&self) -> String;
 }
@@ -31,6 +33,18 @@ impl Summary for Tweet {
 //traitにあるメソッドを使った関数をプラスで作りたい場合。
 pub fn notify<T: Summary>(item: &T) {
     println!("Breaking news! {}", item.summarize());
+}
+
+fn largest<&T>(list: &[T]) -> &T {
+    let mut largest = list[0];
+
+    for &item in list {
+        if item > largest {
+            largest = item;
+        }
+    }
+
+    largest
 }
 
 fn main() {
