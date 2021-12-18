@@ -11,15 +11,6 @@ mod mod_traits {
 use mod_traits::Out;
 
 #[derive(Debug)]
-pub enum Animal {
-    Human(Human),
-    Lion(Lion),
-    Tiger,
-    Seep,
-    //..etc
-}
-
-#[derive(Debug)]
 pub struct Human {
     hogehoge: i64,
 }
@@ -30,7 +21,7 @@ pub struct Lion {
 
 #[derive(Debug)]
 pub struct StaplFood {
-    food_store: HashMap<Animal, Vec<Animal>>,
+    // food_store: HashMap<Animal, Vec<Animal>>,
 }
 
 impl StaplFood {
