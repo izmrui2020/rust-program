@@ -1,21 +1,15 @@
-use std::io::*;
-use std::str::FromStr;
-
-fn read<T: FromStr>() -> T {
-    let stdin = stdin();
-    let stdin = stdin.lock();
-    let token: String = stdin
-        .bytes()
-        .map(|c| c.expect("failed to read char") as char)
-        .skip_while(|c| c.is_whitespace())
-        .take_while(|c| !c.is_whitespace())
-        .collect();
-    token.parse().ok().expect("failed to parse token")
-}
-
 fn main() {
-    let s1: u32 = read();
-    let s2: String = read();
-    let s3: f32 = read();
-    println!("{:?}, {:?}, {:?}", s1, s2, s3);
+    let num = vec![5];
+    let arg = vec![6];
+
+    println!("num: {:p}", &num);
+    println!("arg: {:p}", &arg);
+
+    let c2 = |arg| {
+        println!("num: {:p}", &num);
+        println!("arg: {:p}", arg);
+    };
+    c2(&arg);
+    println!("num: {:p}", &num);
+    println!("arg: {:p}", &arg);
 }
