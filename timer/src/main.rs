@@ -1,8 +1,4 @@
-use timer::Timer;
-use chrono::Duration;
 use async_timer::Interval;
-use std::sync::mpsc::channel;
-use tokio::sync::oneshot;
 
 async fn job() {
     println!("hello");
