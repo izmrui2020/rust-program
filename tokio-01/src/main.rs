@@ -3,12 +3,29 @@ use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 use tokio::sync::mpsc;
 
-mod hoge;
-use hoge::Hoge;
+use std::sync::Arc;
+use std::sync::Mutex;
+use std::thread;
 
-#[tokio::main]
-async fn main() -> Result<()> {
-    Hoge::iter().for_each(|v| {});
+fn main() -> Result<()> {
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
+
+    for _ in 0..10 {
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            let mut num = counter.lock().unwrap();
+
+            *num += 1;
+        });
+        handles.push(handle);
+    }
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("m = {:?}", counter.lock().unwrap());
 
     Ok(())
 }
