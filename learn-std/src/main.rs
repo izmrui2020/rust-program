@@ -1,69 +1,29 @@
-use std::collections::HashMap;
-use strum::IntoEnumIterator;
-use strum_macros::EnumIter;
-trait Hoge {
-    fn hoge();
+
+
+enum MyError {
+    IoError(std::io::Error),
+    MyError(String),
+    OtherError(Box<dyn std::error::Error>),
 }
-
-#[derive(Default)]
-struct A {
-    hoge: String
-}
-impl Hoge for A {fn hoge(){}}
-
-#[derive(Default)]
-struct B {
-    hoge: String,
-}
-impl Hoge for B {fn hoge(){}}
-
-#[derive(Default)]
-struct C {
-    hoge: String,
-}
-impl Hoge for C {fn hoge(){}}
-
-
-#[derive(EnumIter)]
-enum StructTypes<T: Hoge + Default> {
-    A(T),
-    B(T),
-    C(T),
-}
-
-impl<T> StructTypes<T>
-where
-    T: Hoge + Default
-{
-    fn new(&self) {
-        match self {
-            A(_) => {self.A.hoge()},
-            B(_) => {self.hoge()},
-            C(_) => {self.hoge()},
-        }
-    }
-}
-
-struct EnumMaster<T: Hoge + Default> {
-    store: HashMap<String, StructTypes<T>>
-}
-
-impl<T> EnumMaster<T>
-where
-    T: Hoge + Default
-{
-    
-    fn hoge() {
-        for i in StructTypes::<T>::iter() {
-            
-        }
-    }
-}
-
-
-
-
 
 fn main() {
-    println!("Hello, world!");
+
+    let s  = std::fs::read_to_string("myfile").map_err(MyError::IoError);
+    let v = vec![1usize, 2, 3];
+    let v = v.into_iter().map(Some).collect::<Vec<_>>();
+
+    if let Ok(s1) = std::env::var("hgeoghe") {
+        if let Ok(s2) = std::env::var("fugafuga") {
+
+        }
+    }
+
+    if let (Ok(s1), Ok(s2)) = (std::env::var("hogeho"), std::env::var("fugafuga")) {
+        println!("hogehoge: {:?}, fugafuga: {:?}", s1, s2);
+    }
+
+    match (std::env::var("hogehoge"), std::env::var("fugafuga")) {
+        (Ok(s), Err(_)) | (_, Ok(s)) => println!("{:?}", s);
+    }
+
 }
