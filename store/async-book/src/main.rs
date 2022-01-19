@@ -1,4 +1,5 @@
 use futures::executor::block_on;
+mod future_trait;
 
 async fn learn_song() -> String { /* ... */ }
 async fn sing_song(song: String) { /* ... */ }
