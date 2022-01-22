@@ -1,0 +1,1 @@
+run-redis:&& docker exec -it redis_sample /bin/bash/
