@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "redis-lib",
+    "redis-main",
+]

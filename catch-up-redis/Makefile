@@ -1,1 +1,2 @@
-run-redis:&& docker exec -it redis_sample /bin/bash/
+run-redis:
+	docker-compose up -d
