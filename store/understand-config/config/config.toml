@@ -1,0 +1,10 @@
+[csv.output]
+file_path = "{CUR}//data//output_%Y%m%d_%H%M%S.csv"
+char_code = "shift-jis"
+
+[csv.input]
+file_path = "../data/ADANIPORTS.csv
+
+[calc]
+value1 = 10
+value2 = 20
