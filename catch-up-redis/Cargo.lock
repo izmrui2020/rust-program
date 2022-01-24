@@ -289,6 +289,10 @@ dependencies = [
 [[package]]
 name = "redis-main"
 version = "0.1.0"
+dependencies = [
+ "redis",
+ "redis-lib",
+]
 
 [[package]]
 name = "ryu"

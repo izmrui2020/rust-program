@@ -8,6 +8,9 @@ pub struct RedisHelper {
 }
 
 impl RedisHelper {
+    pub async fn new() {
+        
+    }
     pub async fn setup_redis(&mut self, url: String) -> Result<()> {
         let cli = Client::open(url)?;
 
@@ -25,8 +28,8 @@ impl RedisHelper {
             .arg(data)
             .ignore();
         
-        pipe.query_async(&mut con)
-            .await;
+        let _: () = pipe.query_async(&mut con)
+            .await?;
         
         Ok(())
     }
