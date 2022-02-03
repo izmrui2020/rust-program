@@ -4,7 +4,7 @@ syntax = "proto3";
 package communicate;
 
 service Conn {
-    rpc echo(EchoRequest) returns (stream EchoReply);
+    rpc echo(EchoRequest) returns (EchoReply);
 }
 
 message EchoRequest {
