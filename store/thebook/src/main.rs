@@ -1,6 +1,8 @@
 //
 use anyhow::Result;
+use tokio_cron_scheduler::{JobScheduler, Job};
 use std::{collections::HashMap, vec};
+use tokio::sync::mpsc;
 
 #[derive(Debug, Clone, Default)]
 struct Help {
@@ -15,6 +17,13 @@ pub  struct HogeHoge {
 }
 
 impl HogeHoge {
+    fn new() -> Self {
+        Self {
+            hash: HashMap::new(),
+            que: Vec::new(),
+        }
+    }
+
     async fn initial(&mut self, data: String) -> Result<()> {
         Ok(())
     }
@@ -38,24 +47,31 @@ impl HogeHoge {
 }
 
 
-fn main() {
+#[tokio::main]
+async fn main() -> Result<()> {
 
-    let mut vec = vec![];
-    let mut vec2 = vec![];
+    let instance = HogeHoge::new();
 
-    for i in 1..100 {
-        vec.push(i*12);
-    }
+    let (tx, rx) = mpsc::channel(32);
+    let mut tx2 = tx.clone();
 
-    for i in 100..200 {
-        vec2.push(i*10);
-    }
+    let mut sched = JobScheduler::new();
+    // 毎日12時15分
+    let job = Job::new("15 12 * * *", |_uuid, _lock| {
+            tx2.send("hoge");
+    });
+    sched.add(job);
 
-    let res: Vec<_> = vec.into_iter().filter(|i| i & 2 == 0).collect();
+    tokio::spawn(sched.start());
 
-    let res2 = vec.into_iter().filter(|i| {
-        i == res.any(|a| a==i)
-    }).collect();
+    let a = tokio::spawn(async move {
+        sched.start()
+    });
+
+    tokio::join!(a);
     
-    println!("Hello, world!");
+    
+    
+    
+    Ok(())
 }
