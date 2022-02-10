@@ -6,30 +6,28 @@ use anyhow::Result;
 pub fn get_weekday(days: u32) -> Vec<u32> {
     let date_management: Vec<u32> = (1..=days).into_iter().map(|x| x as u32).collect();
 
-    let weekday: Vec<u32> = date_management.clone().into_iter().filter(|x| day_of_week(*x)).collect();
-    println!("weekday: {:?}", weekday);
-    let mut added_weekday = weekday.clone();
+    let mut weekday: Vec<u32> = date_management.clone().into_iter().filter(|x| day_of_week(*x)).collect();
 
     while weekday.len() < 22 {
         let mut cursor: u32 = 1;
-        let end_day = added_weekday.last().unwrap() + cursor;
+        let end_day = weekday.last().unwrap() + cursor;
         
         if day_of_week(end_day) {
-            added_weekday.push(end_day);
+            weekday.push(end_day);
         } else {
             cursor += 1;
-            let back_1 = added_weekday.last().unwrap() + cursor;
+            let back_1 = weekday.last().unwrap() + cursor;
             if day_of_week(back_1) {
-                added_weekday.push(back_1);
+                weekday.push(back_1);
             } else {
                 cursor += 1;
-                let back_2 = added_weekday.last().unwrap() + cursor;
-                added_weekday.push(back_2);
+                let back_2 = weekday.last().unwrap() + cursor;
+                weekday.push(back_2);
             }
         }
     }
 
-    added_weekday
+    weekday
 }
 
 fn day_of_week(x: u32) -> bool {
