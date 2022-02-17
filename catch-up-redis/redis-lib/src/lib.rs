@@ -1,6 +1,8 @@
 pub mod redis_helper;
 pub mod connection;
 pub mod data;
+pub mod pubsub;
+pub mod utils;
 
 
 #[cfg(test)]

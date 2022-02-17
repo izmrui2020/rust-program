@@ -5,5 +5,4 @@ use redis::aio::MultiplexedConnection;
 
 fn main() {
     
-    let conn = MultiplexedConnection::new();
 }
