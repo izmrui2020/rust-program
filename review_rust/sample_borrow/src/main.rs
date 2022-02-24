@@ -1,22 +1,42 @@
-use std::f32::consts::E;
+//
+use std::collections::HashMap;
 
+struct HumanA;
+struct HumanB;
+struct HumanC;
 
-#[derive(Clone, Debug)]
+enum Indicator {
+    HumanA(HumanA),
+    HumanB(HumanB),
+    HumanC(HumanC),
+}
+
+#[derive()]
 struct Hoge {
-    hoge: String,
+    store: HashMap<String, Indicator>,
+}
+
+impl Hoge {
+    fn new() -> Self {
+        Self {
+            store: HashMap::new(),
+        }
+    }
+}
+
+fn call_with_42<F>(f: F) 
+where F: FnOnce(i32) -> i32 
+{
+    println!("f(42) = {}", f(42));
+}
+
+fn my_fn<T: std::fmt::Debug>() -> {
+    
 }
 
 fn main() {
 
-    let mut hoge = Hoge {hoge: "hogehgoe".to_string()};
+    call_with_42(|x|  2 * x);
 
-    let mut a = 10;
-    let ref_a = &a;
-    let ref_b = &mut a;
-    let ref_c = &mut hoge;
-
-    ref_c.hoge = "fugafuga".to_string();
-    hoge.hoge = ref_c.hoge;
-
-    println!("{:?}", hoge);
+    
 }
