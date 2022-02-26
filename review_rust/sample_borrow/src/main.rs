@@ -1,42 +1,26 @@
+use std::future::Future;
 //
-use std::collections::HashMap;
-
-struct HumanA;
-struct HumanB;
-struct HumanC;
-
-enum Indicator {
-    HumanA(HumanA),
-    HumanB(HumanB),
-    HumanC(HumanC),
-}
-
-#[derive()]
-struct Hoge {
-    store: HashMap<String, Indicator>,
-}
-
-impl Hoge {
-    fn new() -> Self {
-        Self {
-            store: HashMap::new(),
-        }
-    }
-}
-
-fn call_with_42<F>(f: F) 
-where F: FnOnce(i32) -> i32 
-{
-    println!("f(42) = {}", f(42));
-}
-
-fn my_fn<T: std::fmt::Debug>() -> {
-    
-}
+use std::io::{self, Write};
+use anyhow::Result;
+use std::pin::Pin;
 
 fn main() {
+    let rect = (30, 50);
+    let width = 30;
+    let heigh = 40;
+    println!("hogehoge{}",area(rect));
+}
 
-    call_with_42(|x|  2 * x);
+fn area(rect: (u32, u32)) -> u32 {
+    rect.0 * rect.1
+}
 
-    
+fn recursion<'a, 'b>(some_ref: &'a str) -> Pin<Box<dyn Future<Output = Result<String>> + 'b + Send>>
+where
+    'a: 'b,
+{
+    Box::pin(async move {
+        let result = recursion(some_ref).await?;
+        Ok(result.to_string())
+    })
 }
