@@ -85,18 +85,31 @@ impl<T> Deref for MyBox<T> {
     }
 }
 
-fn main() {
-    // let simulated_user_specified_value = 10;
-    // let simulated_random_number = 7;
+use strum::IntoEnumIterator;
+use strum_macros::{EnumIter, EnumCount};
+use tokio_stream::StreamExt;
+#[derive(EnumIter, Clone, Debug, PartialEq, Eq, Hash)]
+enum Item {
+    AAA,
+    BBB,
+    CCC,
+    DDD,
+    EEE,
+}
 
-    // generate_workout(
-    //     simulated_user_specified_value,
-    //     simulated_random_number
-    // );
+async fn hogehoge() {
+    let mut stream = tokio_stream::iter(Item::iter());
 
-    let x = 5;
-    let y = MyBox::new(x);
+    while let Some(v) = stream.next().await {
+        println!("hgeohoge: {:?}", v);
+    }
+}
 
-    assert_eq!(5, x);
-    assert_eq!(5, *y);
+#[tokio::main]
+async fn main() {
+    
+    for _i in 1..10000 {
+        hogehoge().await;
+    }
+    
 }

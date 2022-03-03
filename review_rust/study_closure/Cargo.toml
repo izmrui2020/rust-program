@@ -6,3 +6,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+anyhow = "1.0.55"
+async-recursion = "1.0.0"
+strum = "0.24.0"
+strum_macros = "0.24.0"
+tokio = { version = "1.17.0", features = ["full"] }
+tokio-stream = "0.1.8"
