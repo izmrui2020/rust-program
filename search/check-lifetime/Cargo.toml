@@ -1,0 +1,15 @@
+[package]
+name = "check-lifetime"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+anyhow = "1.0.56"
+bigdecimal = "0.3.0"
+futures = "0.3.21"
+num-bigint = "0.4.3"
+strum = "0.24.0"
+strum_macros = "0.24.0"
+tokio = { version = "1.17.0", features = ["full"] }
