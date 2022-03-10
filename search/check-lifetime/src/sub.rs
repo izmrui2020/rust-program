@@ -74,38 +74,89 @@ impl Target {
         Ok(())
     }
 
+    // pub async fn update<'a>(&'a mut self) -> Result<()> {
+    //     let multi_ref = Arc::new(RwLock::new(&self.store));
+    //     let mut executor = vec![];
+
+    //     for index in Index::iter() {
+    //         // Arcのcloneだけasyncブロックの外でやらないといけない
+    //         let clone_ref = Arc::clone(&multi_ref);
+
+    //         // async moveでまるごと1つのFutureにする
+    //         let task = async move {
+    //             let key = format!("{}:id", index.to_string());
+    //             let mut wt = clone_ref.write().await;
+    //             let mut data_store = wt.deref_mut().clone();
+    //             if let Some(data_vec) = data_store.get_mut(&index) {
+    //                 data_vec.up.sort_by(|a, b| b.value.cmp(&a.value));
+
+    //                 data_vec.down.sort_by(|a, b| a.value.cmp(&b.value));
+
+    //                 let up_task = insert_redis(&data_vec.up, &key).await;
+    //                 let down_taks = insert_redis(&data_vec.down, &key).await;
+    //             }
+    //         };
+    //         // タスクはここで登録する
+    //         executor.push(task)
+    //     }
+
+    //     futures::future::join_all(executor).await;
+    //     Ok(())
+    // }
+
     pub async fn update<'a>(&'a mut self) -> Result<()> {
+        let mut executor = vec![];
 
-        // let multi_ref = Arc::new(RwLock::new(&self.store));
-        // let mut executor = vec![];
+        // self.storeをcloneする
+        for (index, mut data_vec) in self.store.clone().into_iter() {
+            let key = format!("{}:id", index.to_string());
+            data_vec.up.sort_by(|a, b| b.value.cmp(&a.value));
 
-        // for index in Index::iter() {
-        //     let key= format!("{}:id", index.to_string());
+            data_vec.down.sort_by(|a, b| a.value.cmp(&b.value));
 
-        //     let clone_ref = Arc::clone(&multi_ref);
-        //     let mut wt = clone_ref.write().await;
-        //     let mut data_store = wt.deref_mut().clone();
+            let up_task = insert_redis(data_vec.up, key.clone());
+            let down_taks = insert_redis(data_vec.down, key);
 
-        //     if let Some(data_vec) = data_store.get_mut(&index) {
-        //         data_vec.up.sort_by(|a, b| b.value.cmp(&a.value));
+            executor.push(up_task);
+            executor.push(down_taks);
+        }
 
-        //         data_vec.down.sort_by(|a, b| a.value.cmp(&b.value));
-
-        //         let up_task = insert_redis(&data_vec.up, &key);
-        //         let down_taks = insert_redis(&data_vec.down, &key);
-
-        //         executor.push(up_task);
-        //         executor.push(down_taks);
-        //     }
-        // }
-
-        // futures::future::join_all(executor).await;
+        futures::future::join_all(executor).await;
         Ok(())
     }
+
+    // pub async fn update<'a>(&'a mut self) -> Result<()> {
+
+    //     let mut executor = vec![];
+
+
+    //     for (index, mut data_vec) in self.store.clone().into_iter() {
+    //         let key = format!("{}:id", index.to_string());
+
+    //             data_vec.up.sort_by(|a, b| b.value.cmp(&a.value));
+
+    //             data_vec.down.sort_by(|a, b| a.value.cmp(&b.value));
+
+    //             let up_task = insert_redis(&data_vec.up, &key);
+    //             let down_taks = insert_redis(&data_vec.down, &key);
+
+    //             executor.push(up_task);
+    //             executor.push(down_taks);
+    //     }
+
+    //     futures::future::join_all(executor).await;
+
+    //     Ok(())
+    // }
 }
 
-
-pub async fn insert_redis(data: &[Data], key: &str) -> Result<()> {
-
-    Ok(())
+pub async fn insert_redis(data: Vec<Data>, key: String) -> impl std::future::Future<Output = Result<()>> {
+    async{ Ok(()) }
 }
+
+// pub async fn insert_redis<'a>(data: &'a [Data], key: &'a str) -> impl std::future::Future<Output = Result<()>> + 'a {
+
+//     async {
+//         Ok(())
+//     }
+// }
