@@ -3,7 +3,7 @@ use anyhow::Result;
 use crossbeam_channel::Receiver;
 use super::under::Under;
 
-struct Run {
+pub struct Run {
     store: Under,
 }
 
@@ -14,7 +14,7 @@ impl Run {
         }
     }
 
-    pub async fn run(self: &'static mut Self) -> Result<()> {
+    pub fn run(self: &'static mut Self) -> Result<()> {
         
         let task = tokio::spawn(async move {
             self.store.sort().await;
