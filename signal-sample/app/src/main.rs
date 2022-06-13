@@ -4,6 +4,7 @@ use tokio::sync::mpsc;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 use signal_hook::consts::signal::*;
+use std::sync::Condvar;
 
 #[derive(Debug)]
 enum Command {
@@ -17,17 +18,20 @@ async fn main() -> Result<()> {
 
     let (tx, mut rx) = mpsc::channel(10);
 
+    let cond = Arc::new(Condvar::new());
+
     let hook = Arc::new(AtomicBool::new(false));
     let _ = signal_hook::flag::register(SIGHUP, Arc::clone(&hook));
     
     let task1 = tokio::spawn(async move {
-        
-        while !hook.load(Ordering::Relaxed) {
-            continue;
-        }
+        loop {
+            tokio::time::sleep(std::time::Duration::from_micros(100)).await;
 
-        tx.send(Command::SendA).await.unwrap();
-        hook.store(false, Ordering::Relaxed);
+            if hook.load(Ordering::Relaxed) {
+                tx.send(Command::SendA).await.unwrap();
+                hook.store(false, Ordering::Relaxed);
+            }
+        }
     });
 
     let receive_task = tokio::spawn(async move {
